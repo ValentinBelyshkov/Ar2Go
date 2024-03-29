@@ -1,0 +1,17 @@
+header {
+  position: relative;
+
+  z-index: 200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  top: 0;
+
+  width: 100%;
+  
+  border-radius: 0 0 30px 30px;
+
+  background-color: #51A8FF;
+}

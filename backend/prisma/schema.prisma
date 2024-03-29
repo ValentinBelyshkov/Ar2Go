@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name String
+
+  email      String       @unique
+  // phone String? @unique
+  Session    Session[]
+  QuestState QuestState[]
+
+  @@map("users")
+}
+
+model Session {
+  id String @id @default(uuid())
+
+  refreshToken String @map("refresh_token")
+
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
+}
+
+model QuestState {
+  id Int @id @default(autoincrement())
+
+  quest1 Boolean @default(false)
+  quest2 Boolean @default(false)
+  quest3 Boolean @default(false)
+  quest4 Boolean @default(false)
+  quest5 Boolean @default(false)
+  quest6 Boolean @default(false)
+  quest7 Boolean @default(false)
+
+  stars  Int @default(0)
+  hearts Int @default(3)
+
+  userId String @unique @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@map("quests_state")
+}
