@@ -9,7 +9,7 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma deploy
+RUN npx prisma deploy --yes
 
 RUN npx prisma generate --yes
 
@@ -25,6 +25,8 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/package-lock.json .
 
 RUN npm install
+
+RUN npx prisma generate --yes
 
 RUN npm run build
 
