@@ -5,6 +5,7 @@ import { Header } from "../components/Header";
 import { FooterButton } from "../components/FooterButton";
 import api from "../stores/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../stores/auth";
 
 export const Map = () => {
   const [distance, setDistance] = useState(0);
@@ -13,6 +14,11 @@ export const Map = () => {
   const [loading, setLoading] = useState(true);
   const [isCatchable, setIsCatchable] = useState(false);
   const navigate = useNavigate();
+  const { isAuth } = useAuth();
+
+  if (!isAuth) {
+    navigate('/login');
+  }
 
   useEffect(() => {
     const receiveMessage = (event: MessageEvent) => {
