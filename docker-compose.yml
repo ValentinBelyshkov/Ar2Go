@@ -37,6 +37,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+    volumes:
+      - /etc/nginx/certs/:/etc/nginx/certs/
     depends_on:
       - backend
       - webxr
