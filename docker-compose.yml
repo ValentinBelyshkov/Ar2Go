@@ -20,7 +20,7 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/ar2go?schema=public
       GOOGLE_OAUTH_CLIENT_ID: 902777081735-0rdaf1f7o9vhte7i4qtn5370j8n0u7t6.apps.googleusercontent.com
       GOOGLE_OAUTH_CLIENT_SECRET: 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
-      GOOGLE_OAUTH_CALLBACK_URL: https://ar2go.ru/api/auth/google/callback
+      GOOGLE_OAUTH_CALLBACK_URL: http://ar2go.ru/api/auth/google/callback
       GOOGLE_OAUTH_SCOPE: email,profile
       JWT_SECRET: xxxxxxxx
       SALT_ROUNDS: 10
