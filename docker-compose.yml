@@ -38,7 +38,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /etc/nginx/certs/:/etc/nginx/certs/
+      - /etc/nginx/certs/fulchain.pem:/etc/nginx/certs/fulchain.pem
+      - /etc/nginx/certs/privkey.pem:/etc/nginx/certs/privkey.pem
     depends_on:
       - backend
       - webxr
