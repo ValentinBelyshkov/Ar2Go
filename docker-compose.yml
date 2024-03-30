@@ -20,7 +20,7 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/ar2go?schema=public
       GOOGLE_OAUTH_CLIENT_ID: 902777081735-0rdaf1f7o9vhte7i4qtn5370j8n0u7t6.apps.googleusercontent.com
       GOOGLE_OAUTH_CLIENT_SECRET: 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
-      GOOGLE_OAUTH_CALLBACK_URL: http://localhost:1000/api/auth/google/callback
+      GOOGLE_OAUTH_CALLBACK_URL: http://185.247.17.225/api/auth/google/callback
       GOOGLE_OAUTH_SCOPE: email,profile
       JWT_SECRET: xxxxxxxx
       SALT_ROUNDS: 10
@@ -36,7 +36,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "1000:1000"
+      - "80:80"
     depends_on:
       - backend
       - webxr
