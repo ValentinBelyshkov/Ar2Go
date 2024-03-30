@@ -1,27 +1,24 @@
-import { GoogleLogin } from "@react-oauth/google"
-
 import './Login.scss';
 import { useAuth } from "../stores/auth";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  const { google } = useAuth();
+  const { google, isAuth } = useAuth();
+  const navigate = useNavigate();
 
   const responseMessage = async () => {
-    // console.log(credential);
-
-    // await fetch('http://localhost:3000/auth/google/callback', { headers: { Authorization: credential },  });
     return google();
   };
-  const errorMessage = (error) => {
-      console.log(error);
-  };
+
+  if (isAuth) {
+    navigate('/map');
+  }
 
   return (
     <div className="login">
-      <img src="/public/logo.jpeg" alt="" />
+      <img src="/logo.jpeg" alt="" />
       <h1>AR2GO</h1>
       <a onClick={responseMessage}>Login</a>
-      {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} theme="filled_blue" /> */}
     </div>
-  )
+  );
 }

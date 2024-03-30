@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display a map on a webpage</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiYXJnb3R1ciIsImEiOiJjbHRjdDl4MXkwaWNhMmxudHdoanRld2FjIn0.G79J2Kjd8l2jrEQnc1EdyA';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+  center: [37.622093, 55.753994],
+ // starting position [lng, lat]
+        zoom: 12 // starting zoom
+    });
+
+const getUserLocation = () => {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                
+                resolve(position);
+            },
+            error => {
+                reject(error);
+            },
+            {
+                enableHighAccuracy: true,
+            }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+    });
+  
+}
+
+successLocation();
+
+async function successLocation() {
+  const position = await getUserLocation();
+    
+  var userLocation = [position.coords.longitude, position.coords.latitude]; // координаты пользователя
+
+  const excludePoints = (new URLSearchParams(window.location.search).get('exclude') || '').split(',');
+
+  // Создаем маркеры на карте
+  const points = [
+    { coordinates: [37.618423, 55.751244], name: "Точка 1", id: 1 },
+    { coordinates: [37.6177, 55.808488], name: "Точка 2", id: 2 },
+    { coordinates: [37.365014, 55.749667], name: "Точка 3", id: 3 },
+    { coordinates: [37.785242, 55.730298], name: "Точка 4", id: 4 },
+    { coordinates: [19.828523, 45.263292], name: "Точка 5", id: 5 },
+    { coordinates: [20.459849, 44.817047], name: "Точка 6", id: 6 },
+    { coordinates: [59.941408, 30.352682], name: "Точка 7", id: 7 }
+    ];
+
+    const allMarkers = points.filter(i => !excludePoints.includes(String(i.id))).map(point => createMarker(point.coordinates, point.name, point.id));
+
+  // Функция для создания маркера
+  function createMarker(coordinates, hintContent, id) {
+    const marker = new mapboxgl.Marker() // создаем маркер
+      .setLngLat(coordinates) // устанавливаем координаты маркера
+      .setPopup(new mapboxgl.Popup().setHTML(hintContent)) // добавляем подсказку
+      .addTo(map); // добавляем маркер на карту
+
+    // Добавляем обработчик клика на маркер
+    // marker.getElement().addEventListener("click", function () {
+    //   var markerLngLat = marker.getLngLat().toArray(); // Получаем координаты маркера
+    //   var distance = turf.distance(userLocation, markerLngLat); // Вычисляем расстояние
+    // });
+
+    return { marker, id };
+  }
+
+  // Функция для рассчета расстояния и проверки расстояния в режиме реального времени
+  function checkDistanceRealTime(userLngLat) {
+    var closestDistance = Infinity; // Инициализируем расстояние как бесконечность
+    var closestPoint = null; // Инициализируем ближайшую точку как null
+
+    // Проходим по всем точкам, чтобы найти ближайшую
+    allMarkers.forEach(function (point) {
+      var pointLngLat = point.marker.getLngLat().toArray(); // Преобразуем координаты маркера в формат массива чисел
+      var distance = turf.distance(userLngLat, pointLngLat); // Расстояние между пользователем и маркером
+      if (distance < closestDistance) {
+        closestDistance = distance; // Обновляем ближайшее расстояние
+        closestPoint = point.id; // Обновляем ближайшую точку
+      }
+    });
+
+    return { distance: closestDistance, point: closestPoint };
+
+    // Если ближайшее расстояние меньше или равно 100 метрам, показываем кнопку "Забрать приз"
+    // if (closestDistance <= 100) {
+    //   var claimPrizeBtn = document.getElementById("claimPrizeBtn");
+    //   claimPrizeBtn.style.display = "block"; // Показываем кнопку
+    //   claimPrizeBtn.addEventListener("click", function () {
+    //     // alert("Поймай героя!");
+    //   });
+    // } else {
+    //   var claimPrizeBtn = document.getElementById("claimPrizeBtn");
+    //   claimPrizeBtn.style.display = "none"; // Скрываем кнопку
+    // }
+  }
+
+  // Функция, вызываемая при изменении местоположения пользователя
+  function updateLocation(position) {
+    var userLngLat = [position.coords.longitude, position.coords.latitude]; // Преобразуем координаты пользователя в формат массива чисел
+    const { distance, point } = checkDistanceRealTime(userLngLat); // Вызываем функцию для рассчета расстояния в режиме реального времени
+    
+    const message = {
+        target: 'distance',
+        distance,
+        point,
+    };
+
+    window.parent.postMessage(message, '*');  
+  }
+
+  // Обновляем местоположение пользователя в реальном времени
+  navigator.geolocation.watchPosition(updateLocation, errorLocation, {
+    enableHighAccuracy: true,
+  });
+
+  // Функция для создания маркера для текущего местоположения пользователя с аватаркой
+  var userMarker = new mapboxgl.Marker({
+    element: createAvatarElement(), // Используем функцию для создания элемента с аватаркой
+    anchor: "bottom", // Устанавливаем якорь маркера внизу
+  })
+    .setLngLat(userLocation) // Устанавливаем координаты маркера
+    .addTo(map); // Добавляем маркер на карту
+
+  // Функция для создания элемента с аватаркой
+  function createAvatarElement() {
+    var element = document.createElement("div");
+    element.style.backgroundImage =
+      'url("https://cdn.glitch.global/6d050929-c504-46d6-a7e8-4452a7970304/avatar.png?v=1710146209174")';
+    element.style.backgroundSize = "cover";
+    element.style.width = "40px";
+    element.style.height = "40px";
+    return element;
+  }
+}
+
+function errorLocation() {
+  console.error("Unable to retrieve your location");
+}
+
+</script>
+    <button id="claimPrizeBtn"></button>
+</body>
+</html>

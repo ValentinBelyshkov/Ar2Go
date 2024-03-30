@@ -1,36 +1,27 @@
-  # Stage 1: Build NestJS Application
 FROM node:20 AS builder
 
 WORKDIR /app
 
-COPY package.json package.json ./
+COPY package*.json .
 
 RUN npm install
 
 COPY . .
 
-RUN npx prisma deploy --yes
-
-RUN npx prisma generate --yes
+RUN npx prisma generate
 
 RUN npm run build
 
-
-# Stage 2: Production Environment
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
-COPY --from=builder /app/package.json .
-COPY --from=builder /app/package-lock.json .
+COPY --from=builder /app/package*.json .
+COPY --from=builder /app/prisma .
 
 RUN npm install
-
-RUN npx prisma generate --yes
-
-RUN npm run build
+RUN npx prisma generate
 
 COPY --from=builder /app/dist ./dist
 
-CMD ["node", "dist/main"]
-
+CMD ["npm", "run", "start:migrate:prod"]

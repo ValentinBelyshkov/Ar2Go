@@ -4,6 +4,7 @@ import './Map.scss';
 import { Header } from "../components/Header";
 import { FooterButton } from "../components/FooterButton";
 import api from "../stores/api";
+import { useNavigate } from "react-router-dom";
 
 export const Map = () => {
   const [distance, setDistance] = useState(0);
@@ -11,6 +12,7 @@ export const Map = () => {
   const [excludePoints, setExcludePoints] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCatchable, setIsCatchable] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const receiveMessage = (event: MessageEvent) => {
@@ -51,9 +53,11 @@ export const Map = () => {
     };
   }, []);
 
-  const startQuest = async () => {
+  const startQuest = () => {
     try {
       const point = pointRef.current;
+
+      navigate('/quest/' + point);
     } catch (e) {
       console.log(e);
     }
@@ -62,7 +66,7 @@ export const Map = () => {
   return loading ? 
       "loading" : 
       ( <div className="map">
-        <iframe src={`http://localhost:3001/gotomap?exclude=${excludePoints.join(',')}`} allow="geolocation"/>
+        <iframe src={`/webxr/gotomap?exclude=${excludePoints.join(',')}`} allow="geolocation"/>
         <Header height={"10%"}>
           <h1>{Math.round(distance)} метров до точки</h1>
         </Header>

@@ -1,47 +1,42 @@
-  version: '3'
+version: "3"
 
-  services:
-    postgres:
-      container_name: postgres
-      image: postgres
-      restart: always
-      environment:
-        POSTGRES_DB: ar2go
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-
-    nestjs:
-      container_name: nestjs
-      build:
-        context: .
-        dockerfile: Dockerfile
-      depends_on:
-        - postgres
-      environment:
-        DATABASE_URL: psql://postgres:postgres@postgres:5432/ar2go?schema=public
-        GOOGLE_OAUTH_CLIENT_ID: 902777081735-0rdaf1f7o9vhte7i4qtn5370j8n0u7t6.apps.googleusercontent.com
-        GOOGLE_OAUTH_CLIENT_SECRET: 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
-        GOOGLE_OAUTH_CALLBACK_URL: http://185.247.17.225/api/auth/google/callback
-        GOOGLE_OAUTH_SCOPE: email,profile
-        JWT_SECRET: xxxxxxxx
-        SALT_ROUNDS: 10
-      ports:
-        - "3000:3000"
-    nginx:
-      image: nginx:alpine
-      build:
-        context: ./nginx
-        dockerfile: Dockerfile
-      ports:
-        - "80:80"
-      depends_on:
-        - react
-        - nestjs
-    react:
-      container_name: frontend
-      build:
-        context: ./frontend
-        dockerfile: Dockerfile
-      ports:
-        - "5173:5173"
-
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ar2go
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/ar2go?schema=public
+      GOOGLE_OAUTH_CLIENT_ID: 902777081735-0rdaf1f7o9vhte7i4qtn5370j8n0u7t6.apps.googleusercontent.com
+      GOOGLE_OAUTH_CLIENT_SECRET: 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
+      GOOGLE_OAUTH_CALLBACK_URL: http://localhost:1000/api/auth/google/callback
+      GOOGLE_OAUTH_SCOPE: email,profile
+      JWT_SECRET: xxxxxxxx
+      SALT_ROUNDS: 10
+  webxr:
+    container_name: webxr
+    environment:
+      PORT: 3000
+    build:
+      context: ./webxr
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "1000:1000"
+    depends_on:
+      - backend
+      - webxr

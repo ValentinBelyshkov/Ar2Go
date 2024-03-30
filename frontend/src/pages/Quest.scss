@@ -3,12 +3,16 @@
   height: 100%;
 
   .purchase {
+    position: absolute;
+
+    top: 60%;
+
     display: inline-block;
 
     margin: 0 auto;
-    margin-top: 6%;
 
     width: 80%;
+    transform: translate(-50%, -50%);
 
     background-color: white;
     border-radius: 20px;
@@ -80,10 +84,18 @@
 
 .quest .content {
   text-align: center;
+
+  margin: 0 auto;
+  width: 80%;
+
+  .failed {
+    margin-top: 30%;
+    color: #B0B8CB;
+  }
 }
 
 .quest .content h1 {
-  margin-top: 13%;
+  margin-top: 25%;
 
   color: #FFBB0E;
   

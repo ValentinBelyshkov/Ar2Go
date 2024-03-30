@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Model Viewer Example</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+    </head>
+    <body>
+        <model-viewer src="https://stevesspace.com/assets/models/Astronaut.glb" 
+            ar ar-modes="webxr scene-viewer quick-look" ar-scale="auto" camera-controls 
+            alt="A 3D model of an astronaut" 
+            skybox-image="https://stevesspace.com/assets/environments/aircraft_workshop_01_1k.hdr" 
+            ios-src="https://stevesspace.com/assets/models/Astronaut.usdz"></model-viewer>
+    </body>
+    <script>
+        const loop = () => {
+            try {
+                var modelViewer = document.querySelector('model-viewer');
+
+                if (modelViewer.canActivateAR) {
+                    modelViewer.activateAR();
+                } else {
+                    setTimeout(loop, 1000);
+                }
+
+            } catch {
+                console.log('Not initialized yet');
+                setTimeout(loop, 1000);
+            }
+        }
+
+        loop();
+      </script>
+</html>
