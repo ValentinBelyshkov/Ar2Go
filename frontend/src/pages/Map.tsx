@@ -16,11 +16,11 @@ export const Map = () => {
   const navigate = useNavigate();
   const { isAuth } = useAuth();
 
-  if (!isAuth) {
-    navigate('/login');
-  }
-
   useEffect(() => {
+    if (!isAuth) {
+      navigate('/login');
+    }
+    
     const receiveMessage = (event: MessageEvent) => {
       if (event.data.target === 'distance') {
         const { distance, point } = event.data;

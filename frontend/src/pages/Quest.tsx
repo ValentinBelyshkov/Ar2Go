@@ -12,10 +12,6 @@ export const Quest = () => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
 
-  if (!isAuth) {
-    navigate('/login');
-  }
-
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
 
@@ -23,6 +19,10 @@ export const Quest = () => {
   const failed = params.get('failed');
 
   useEffect(() => {
+    if (!isAuth) {
+      navigate('/login');
+    }
+    
     (async () => {
       if (pointId && failed) {
         const body = {
