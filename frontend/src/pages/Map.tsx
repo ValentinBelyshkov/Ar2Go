@@ -63,7 +63,7 @@ export const Map = () => {
     try {
       const point = pointRef.current;
 
-      navigate('/webxr/qp' + point);
+      window.location.href = '/webxr/qp' + point;
     } catch (e) {
       console.log(e);
     }
