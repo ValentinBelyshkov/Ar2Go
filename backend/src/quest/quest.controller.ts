@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { QuestService } from './quest.service';
 import { UpdateQuestDto } from './dto/update-quest.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -11,6 +19,12 @@ export class QuestController {
   @UseGuards(AuthGuard)
   getQuestState(@Req() req) {
     return this.questService.getQuestState(req.user);
+  }
+
+  @Post('reset')
+  @UseGuards(AuthGuard)
+  resetQuestState(@Req() req) {
+    return this.questService.reset(req.user);
   }
 
   @Patch()

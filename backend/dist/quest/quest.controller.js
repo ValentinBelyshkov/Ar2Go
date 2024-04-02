@@ -24,6 +24,9 @@ let QuestController = class QuestController {
     getQuestState(req) {
         return this.questService.getQuestState(req.user);
     }
+    resetQuestState(req) {
+        return this.questService.reset(req.user);
+    }
     updateQuestState(req, updateQuestDto) {
         return this.questService.updateQuest(req.user, updateQuestDto);
     }
@@ -37,6 +40,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], QuestController.prototype, "getQuestState", null);
+__decorate([
+    (0, common_1.Post)('reset'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], QuestController.prototype, "resetQuestState", null);
 __decorate([
     (0, common_1.Patch)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),

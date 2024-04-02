@@ -92,6 +92,36 @@
     margin-top: 30%;
     color: #B0B8CB;
   }
+
+  .success {
+    margin: 0 auto;
+    margin-top: 110px;
+
+    font-weight: 700;
+    font-size: 35px;
+
+    max-width: 80%;
+  }
+
+  .contact {
+    margin-top: 100px;
+
+    font-weight: 600;
+    font-size: 16;
+
+    .socials {
+      margin: 0 auto;
+
+      display: flex;
+      flex-wrap: wrap;
+
+      width: 180px;
+
+      a {
+        flex-basis: 50%;
+      }
+    }
+  }
 }
 
 .quest .content h1 {

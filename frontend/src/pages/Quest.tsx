@@ -5,6 +5,7 @@ import './Quest.scss';
 import api from '../stores/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../stores/auth';
+import { SOCIALS } from '../constants';
 
 export const Quest = () => {
   const [hearts, setHearts] = useState(3);
@@ -48,8 +49,14 @@ export const Quest = () => {
     })();
   }, []);
 
-  const onClick = () => {
-    navigate(failed === 'true' ? '/webxr/qp' + pointId : '/map');
+  const handleButton = async () => {
+    if (failed === 'true') {
+      window.location.href = '/webxr/qp' + pointId;
+    } else if (stars === 700) {
+      await resetQuestsState();
+    }
+
+     navigate('/map');
   };
 
   const renderHearts = (value: number) => {
@@ -64,6 +71,14 @@ export const Quest = () => {
     return hearts;
   };
 
+  const resetQuestsState = async () => {
+    try {
+      await api.post('quests/reset');
+    } catch (e) {
+      console.log(e);
+    }
+  } 
+
   return (
     <div className="quest">
       <Header height={"15%"}>
@@ -73,20 +88,45 @@ export const Quest = () => {
         </div>  
       </Header>
       <div className="content">
-        { failed === 'true' ?
-          <h1 className="failed">{"Попробуй еще раз :("}</h1> :
+        { stars === 700 &&
           <>
-            <h1>Победа!</h1>
-            <div className="points">
-              <p>Получено баллов:</p>
-              <div className="stars">
-                <span>100</span>
-                <img src="/star.svg" width={"39px"} height={"38px"} />
+            <h1 className='success'>Вы прошли все квесты!</h1>
+            <div className="contact">
+              <p>Свяжитесь с нами</p>
+              <div className="socials">
+                <a href={SOCIALS.instagram} target="_blank" rel="noreferrer">
+                  <img src="/instagram.svg" />
+                </a>
+                <a href={SOCIALS.telegram} target="_blank" rel="noreferrer">
+                  <img src="/telegram.svg" />
+                </a>
+                <a href={SOCIALS.whatsapp} target="_blank" rel="noreferrer">
+                  <img src="/whatsapp.svg" />
+                </a>
+                <a href={SOCIALS.youtube} target="_blank" rel="noreferrer">
+                  <img src="/youtube.svg" />
+                </a>
               </div>
             </div>
           </>
         }
-        { hearts < 3 && stars !== 700 &&
+        { stars < 700 && 
+          (
+            failed === 'true' ?
+            <h1 className="failed">{"Попробуй еще раз :("}</h1> :
+            <>
+              <h1>Победа!</h1>
+              <div className="points">
+                <p>Получено баллов:</p>
+                <div className="stars">
+                  <span>100</span>
+                  <img src="/star.svg" width={"39px"} height={"38px"} />
+                </div>
+              </div>
+            </>
+          )
+        }
+        { hearts < 3 && stars < 700 &&
           <div className="purchase">
             <img src="/heart.svg" alt="Heart" width={"37px"} height={"37px"} />
             <p>1 жизнь - 50 баллов</p>
@@ -94,11 +134,10 @@ export const Quest = () => {
           </div>
         }
       </div>
-      { stars !== 700 &&
-        <FooterButton onClick={onClick}>
-          { failed === 'true' ? 'Еще раз!' : 'Далее' }
-        </FooterButton>
-      }
+      <FooterButton onClick={handleButton}>
+        { failed === 'true' ? 'Еще раз!' : 'Далее' }
+      </FooterButton>
+      
     </div>
   );
 }

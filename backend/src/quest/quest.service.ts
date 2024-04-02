@@ -37,4 +37,23 @@ export class QuestService {
       },
     });
   }
+
+  reset(user: JwtDto) {
+    return this.prismaService.questState.update({
+      where: {
+        userId: user.userId,
+      },
+      data: {
+        quest1: false,
+        quest2: false,
+        quest3: false,
+        quest4: false,
+        quest5: false,
+        quest6: false,
+        quest7: false,
+        hearts: 3,
+        stars: 0,
+      },
+    });
+  }
 }
