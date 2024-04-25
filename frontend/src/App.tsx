@@ -10,9 +10,9 @@ function App() {
       <Routes>
           <Route path="/profile" Component={Profile} />
           <Route path='/login' Component={Login} />
-          <Route path={'/map'} Component={Map} />
-          <Route path={'/quest'} Component={Quest} />
-          <Route path='*' element={<Navigate to="/map" replace />} />
+          <Route path='/map' Component={Map} />
+          <Route path='/quest' Component={Quest} />
+          <Route path='*' element={<Navigate to="/profile" />} />
       </Routes>
     </BrowserRouter>
   )

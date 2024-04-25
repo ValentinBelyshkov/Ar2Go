@@ -13,6 +13,7 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("./user/user.service");
 const quest_module_1 = require("./quest/quest.module");
+const user_module_1 = require("./user/user.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -31,6 +32,7 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             quest_module_1.QuestModule,
+            user_module_1.UserModule,
         ],
         providers: [user_service_1.UserService],
     })

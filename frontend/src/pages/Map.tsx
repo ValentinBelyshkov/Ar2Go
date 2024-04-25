@@ -69,18 +69,17 @@ export const Map = () => {
     }
   }
 
-  return loading ? 
-      "loading" : 
-      ( <div className="map">
-        <iframe src={`/webxr/gotomap?exclude=${excludePoints.join(',')}`} allow="geolocation"/>
-        <Header height={"10%"}>
-          <h1>{Math.round(distance)} метров до точки</h1>
-        </Header>
-        <div style={{ display: isCatchable ? "block" : "none" }}>
-          <FooterButton onClick={startQuest}>
-            Поймать
-          </FooterButton>
-        </div>
+  return (
+    loading ? <h1>loading</h1> : <div className="map">
+      <iframe src={`/webxr/gotomap?exclude=${excludePoints.join(',')}`} allow="geolocation"/>
+      <Header height={"10%"}>
+        <h1>{Math.round(distance)} метров до точки</h1>
+      </Header>
+      <div style={{ display: isCatchable ? "block" : "none" }}>
+        <FooterButton onClick={startQuest}>
+          Поймать
+        </FooterButton>
       </div>
-      );
+    </div>
+  );
 }

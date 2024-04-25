@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from './user/user.service';
 import { QuestModule } from './quest/quest.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { QuestModule } from './quest/quest.module';
     PrismaModule,
     AuthModule,
     QuestModule,
+    UserModule,
   ],
   providers: [UserService],
 })

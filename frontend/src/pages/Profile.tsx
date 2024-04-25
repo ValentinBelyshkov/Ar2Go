@@ -6,7 +6,10 @@ import api from '../stores/api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../stores/auth';
 
+import './Profile.scss';
+
 export const Profile = () => {
+  const [name, setName] = useState('');
   const [hearts, setHearts] = useState(3);
 
   const { isAuth } = useAuth();
@@ -19,14 +22,23 @@ export const Profile = () => {
     
     const fetchData = async () => {
       const { data } = await api.get('quests');
+      const user = await api.get('users/me').then((i) => i.data);
 
       const { hearts } = data;
+      const { name } = user;
 
       setHearts(hearts);
+      setName(name);
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (name !== '') {
+      api.patch('users/me', { name });
+    }
+  }, [name]);
 
   const renderHearts = (value: number) => {
     const hearts = [];
@@ -41,13 +53,23 @@ export const Profile = () => {
   };
 
   return (
-    <div className="quest">
-      <Header height={"15%"}>
-        <div className="info">
+    <div className="profile">
+      <Header height={"40%"}>
+        <div className="profile-info">
+          <p>Оставшиеся жизни</p>
           <div className="hearts">{renderHearts(hearts)}</div>
         </div>  
+        <div className="user-logo">
+          <img src="/user.svg" alt="" />
+        </div>
       </Header>
+      <main>
 
+        <div className="input">
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <img src="/shape.svg" alt="" />
+        </div>
+      </main>
       <FooterButton onClick={() => navigate('/map')}>
         Начать квест
       </FooterButton>
