@@ -1,4 +1,4 @@
-export const SERVER_URL = "http://localhost:3000/api";
+export const SERVER_URL = "https://ar2go.ru/api";
 
 export const SOCIALS = {
   instagram: "https://www.instagram.com",
