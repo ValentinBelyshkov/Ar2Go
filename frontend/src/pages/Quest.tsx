@@ -32,14 +32,14 @@ export const Quest = () => {
           stars: 100,
         };
 
-        const { data } = await api.post('quests', body);
+        const { data } = await api.patch('quests', body);
 
         const { hearts, stars } = data;
   
         setHearts(hearts);
         setStars(stars);
       } else {
-        const { data } = await api.get('quests');
+        const { data } = await api.patch('quests');
 
         const { hearts, stars } = data;
   
